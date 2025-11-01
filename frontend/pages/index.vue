@@ -1,7 +1,10 @@
 <template>
     <main class="home-container">
         <SideNav />
-        <h1 class="container-title">ホーム</h1>
+        <div>
+            <h1 class="container-title">ホーム</h1>
+            <Message />
+        </div>
     </main>
 </template>
 
