@@ -14,7 +14,8 @@ class PostController extends Controller
     public function index()
     {
         $posts = [
-            ['id'=> 1, 'name'=> 'hiro']
+            ['id' => 1, 'name' => 'hiro'],
+            ['id' => 2, 'name' => 'taro'],
         ];
 
         return response()->json($posts);
