@@ -1,5 +1,6 @@
 <script setup>
-const { data: posts, error } = await useFetch('http://localhost:80/api/posts');
+const config = useRuntimeConfig();
+const { data: posts, error } = await useFetch(`${config.public.apiBase}/posts`);
 </script>
 <template>
     <main>
