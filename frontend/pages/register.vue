@@ -1,13 +1,39 @@
+<script setup>
+import { ref } from 'vue';
+
+const name = ref('');
+const email = ref('');
+const password = ref('');
+
+const config = useRuntimeConfig();
+
+const register = async () => {
+    const { data, error } = useFetch(`${config.public.apiBase}/register`, {
+        method: 'post',
+        body: {
+            name: name.value,
+            email: email.value,
+            password: password.value,
+        }
+    })
+    name.value = '';
+    email.value = '';
+    password.value = '';
+}
+
+</script>
+
 <template>
     <AuthHeader />
     <main>
         <div class="register-container">
             <p class="register-container__title">新規登録</p>
-            <form action="" class="register-container__form">
-                <input type="text" placeholder="ユーザーネーム" class="register-container__input">
-                <input type="email" placeholder="メールアドレス" class="register-container__input">
-                <input type="password" placeholder="パスワード" class="register-container__input">
+            <form @submit.prevent="register" class="register-container__form">
+                <input type="text" v-model="name" placeholder="ユーザーネーム" class="register-container__input">
+                <input type="email" v-model="email" placeholder="メールアドレス" class="register-container__input">
+                <input type="password" v-model="password" placeholder="パスワード" class="register-container__input">
                 <input type="submit" value="新規登録" class="register-container__submit">
+                <p v-if="message">{{ message }}</p>
             </form>
         </div>
     </main>
