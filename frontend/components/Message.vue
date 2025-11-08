@@ -1,13 +1,18 @@
+<script setup>
+const { data: posts, error } = await useFetch('http://localhost:80/api/posts');
+</script>
 <template>
     <main>
-        <div class="message-container">
-            <p class="message-container__user_name">userName</p>
-            <img class="message-container__img" src="/heart.png" alt="">
-            <span class="message-container__count">0</span>
-            <img class="message-container__img" src="/cross.png" alt="">
-            <img class="message-container__img detail" src="/detail.png" alt="">
+        <div v-for="post in posts" :key="post.id" class="message-container">
+            <div class="container-item">
+                <p class="message-container__user_name">{{ post.name }}</p>
+                <img class="message-container__img" src="/heart.png" alt="" />
+                <span class="message-container__count">0</span>
+                <img class="message-container__img" src="/cross.png" alt="" />
+                <img class="message-container__img detail" src="/detail.png" alt="" />
+            </div>
+            <p class="message-container__comment">{{ post.content }}</p>
         </div>
-        <p class="message-container__comment">comment</p>
     </main>
 </template>
 
@@ -20,13 +25,19 @@ main {
 .message-container {
     display: flex;
     align-items: center;
+    flex-direction: column;
+    margin-bottom: 30px;
+}
+
+.container-item {
+    display: flex;
 }
 
 .message-container__img {
     width: 40px;
     height: 40px;
     margin-right: 20px;
-}
+    }
 
 .detail {
     margin-left: 60px;
@@ -46,5 +57,6 @@ main {
 
 .message-container__comment {
     color: white;
+    margin-right: auto;
 }
 </style>
