@@ -22,4 +22,4 @@ use Illuminate\Support\Facades\Route;
 
 Route::apiResource('posts', PostController::class);
 
-Route::post('/register', [LoginController::class, 'register']);
+

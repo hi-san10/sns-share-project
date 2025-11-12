@@ -4,23 +4,39 @@ import { ref } from 'vue';
 const name = ref('');
 const email = ref('');
 const password = ref('');
+const error = ref('');
 
 const config = useRuntimeConfig();
+const router = useRouter();
 
 const register = async () => {
-    const { data, error } = useFetch(`${config.public.apiBase}/register`, {
-        method: 'post',
-        body: {
-            name: name.value,
-            email: email.value,
-            password: password.value,
-        }
-    })
-    name.value = '';
-    email.value = '';
-    password.value = '';
-}
+    try {
+        await $fetch(`${config.public.apiBase}/sanctum/csrf-cookie`, {
+                credentials: 'include',
+            })
 
+            const xsrfToken = useCookie('XSRF-TOKEN')
+            const data = await $fetch(`${config.public.apiBase}/register`, {
+            method: 'post',
+            body: {
+                name: name.value,
+                email: email.value,
+                password: password.value,
+            },
+            credentials: 'include',
+            headers: { 'X-XSRF-TOKEN': decodeURIComponent(xsrfToken.value) }
+        })
+
+        if(data.success) {
+            await router.push('/login')
+        } else {
+            error.value = '登録失敗'
+        }
+
+    } catch (err) {
+        error.value = '登録失敗'
+    }
+}
 </script>
 
 <template>
@@ -33,9 +49,9 @@ const register = async () => {
                 <input type="email" v-model="email" placeholder="メールアドレス" class="register-container__input">
                 <input type="password" v-model="password" placeholder="パスワード" class="register-container__input">
                 <input type="submit" value="新規登録" class="register-container__submit">
-                <p v-if="message">{{ message }}</p>
             </form>
         </div>
+        <p class="error_message" v-if="error">{{ error }}</p>
     </main>
 </template>
 
@@ -44,13 +60,14 @@ main {
     background-color: #15202B;
     height: 90vh;
     display: flex;
+    flex-direction: column;
 }
 
 .register-container {
     background-color: white;
     width: 400px;
     height: 250px;
-    margin: auto;
+    margin: 250px auto 100px auto;
     border-radius: 5px;
 }
 
@@ -82,5 +99,11 @@ main {
     width: 100px;
     height: 40px;
     font-size: 12px;
+}
+
+.error_message {
+    color: red;
+    text-align: center;
+    font-size: x-large;
 }
 </style>
