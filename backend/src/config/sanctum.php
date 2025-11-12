@@ -12,12 +12,12 @@ return [
     | and production domains which access your API via a frontend SPA.
     |
     */
-
-    'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', sprintf(
-        '%s%s',
-        'localhost,localhost:3000,127.0.0.1,127.0.0.1:8000,::1',
-        env('APP_URL') ? ','.parse_url(env('APP_URL'), PHP_URL_HOST) : ''
-    ))),
+    'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', 'localhost,localhost:3000')),
+    // 'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', sprintf(
+    //     '%s%s',
+    //     'localhost,localhost:3000,127.0.0.1,127.0.0.1:8000,::1',
+    //     env('APP_URL') ? ','.parse_url(env('APP_URL'), PHP_URL_HOST) : ''
+    // ))),
 
     /*
     |--------------------------------------------------------------------------
@@ -57,9 +57,14 @@ return [
     |
     */
 
+    // 'middleware' => [
+    //     'verify_csrf_token' => App\Http\Middleware\VerifyCsrfToken::class,
+    // ],
     'middleware' => [
-        'verify_csrf_token' => App\Http\Middleware\VerifyCsrfToken::class,
         'encrypt_cookies' => App\Http\Middleware\EncryptCookies::class,
+        'verify_csrf_token' => App\Http\Middleware\VerifyCsrfToken::class,
+        // 'ensure_frontend_requests_are_stateful' => Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
     ],
+
 
 ];
