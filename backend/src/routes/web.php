@@ -3,6 +3,7 @@
 use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
+use Illuminate\Http\Request;
 
 
 /*
@@ -21,10 +22,19 @@ Route::get('/', function () {
 });
 
 
-Route::middleware(['web'])->group(function () {
+Route::middleware(['web'])->group(function ()
+{
     Route::get('/sanctum/csrf-cookie', [CsrfCookieController::class, 'show']);
 
     Route::post('/register', [LoginController::class, 'register']);
 
     Route::post('/login', [LoginController::class, 'login']);
+
+    Route::post('/logout', [LoginController::class, 'logout']);
+
+});
+
+Route::middleware('auth:sanctum')->get('/api/user', function (Request $request)
+{
+    return response()->json($request->user());
 });
