@@ -31,18 +31,27 @@ class LoginController extends Controller
                 'email' => $request->email,
                 'password' => $request->password,
             ]);
+
+            Auth::attempt($credentials);
+            $request->session()->regenerate();
+
+            $user = auth()->user();
+            return response()->json([
+                'success' => true,
+                'user' => $user,
+            ]);
         }
+    }
 
-        Auth::attempt($credentials);
-        $request->session()->regenerate();
-
-        $user = auth()->user();
-
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return response()->json([
-            'success' => true,
-            'user' => $user,
+            'logout' => true,
         ]);
-
     }
+
 }

@@ -1,3 +1,24 @@
+<script setup>
+const config = useRuntimeConfig();
+const router = useRouter();
+const logout = async () => {
+    try {
+        const xsrfToken = useCookie('XSRF-TOKEN')
+        const data = await $fetch(`${config.public.apiBase}/logout`, {
+            method: 'post',
+            credentials: 'include',
+            headers: { 'X-XSRF-TOKEN': decodeURIComponent(xsrfToken.value) }
+        })
+
+        if (data.logout) {
+            router.push('/login')
+        }
+    } catch (err) {
+        console.error(err)
+    }
+}
+</script>
+
 <template>
     <main>
         <img src="/logo.png" alt="" class="logo">
@@ -7,7 +28,7 @@
         </div>
         <div class="side_nav-item">
             <img src="/logout.png" alt="" class="item__img">
-            <NuxtLink to="" class="item__link">ログアウト</NuxtLink>
+            <button @click="logout" class="item__link">ログアウト</button>
         </div>
         <form action="" class="side_nav-form">
             <p class="side_nav-title">シェア</p>
