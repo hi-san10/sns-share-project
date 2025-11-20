@@ -8,4 +8,7 @@ export default defineNuxtConfig({
       apiBase: process.env.NUXT_PUBLIC_API_BASE,
     },
   },
+  plugins: [
+    '~/plugins/firebase.client.ts'
+  ],
 })

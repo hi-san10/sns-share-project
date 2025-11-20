@@ -1,43 +1,52 @@
 <script setup>
-import { ref } from 'vue';
-
-const name = ref('');
-const email = ref('');
-const password = ref('');
-const error = ref('');
+import { ref } from 'vue'
+import { createUserWithEmailAndPassword } from "firebase/auth"
 
 const config = useRuntimeConfig();
 const router = useRouter();
 
+const name = ref('');
+const email = ref('');
+const password = ref('');
+
+let auth = null
+const nuxtApp = useNuxtApp()
+auth = nuxtApp.$auth
+
 const register = async () => {
     try {
-        await $fetch(`${config.public.apiBase}/sanctum/csrf-cookie`, {
-                credentials: 'include',
-            })
+    // Firebase で登録
+        const userCredential = await createUserWithEmailAndPassword(auth, email.value, password.value)
+        const user = userCredential.user
 
-            const xsrfToken = useCookie('XSRF-TOKEN')
-            const data = await $fetch(`${config.public.apiBase}/register`, {
-            method: 'post',
+    // IDトークン取得
+        const idToken = await user.getIdToken(true)
+
+    // Laravel API へ送信
+        const data = await $fetch(`${config.public.apiBase}/api/register`, {
+            method: 'POST',
             body: {
                 name: name.value,
                 email: email.value,
                 password: password.value,
             },
-            credentials: 'include',
-            headers: { 'X-XSRF-TOKEN': decodeURIComponent(xsrfToken.value) }
+            headers: {
+                Authorization: `Bearer ${idToken}`
+            }
         })
-
-        if(data.success) {
+        if (data.user) {
+            await console.log(data.user)
             await router.push('/login')
-        } else {
-            error.value = '登録失敗'
         }
-
+        console.log('登録完了')
     } catch (err) {
-        error.value = '登録失敗'
+        console.error('Firebase Error:', err)
+        console.log('Error code:', err.code)
+        console.log('Error message:', err.message)
     }
 }
 </script>
+
 
 <template>
     <AuthHeader />
@@ -51,7 +60,7 @@ const register = async () => {
                 <input type="submit" value="新規登録" class="register-container__submit">
             </form>
         </div>
-        <p class="error_message" v-if="error">{{ error }}</p>
+        <!-- <p class="error_message" v-if="error">{{ error }}</p> -->
     </main>
 </template>
 
