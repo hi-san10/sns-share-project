@@ -8,21 +8,16 @@ const router = useRouter();
 const name = ref('');
 const email = ref('');
 const password = ref('');
+const error = ref('');
 
-let auth = null
 const nuxtApp = useNuxtApp()
-auth = nuxtApp.$auth
+const auth = nuxtApp.$auth
 
 const register = async () => {
     try {
-    // Firebase で登録
         const userCredential = await createUserWithEmailAndPassword(auth, email.value, password.value)
-        const user = userCredential.user
+        const idToken = await userCredential.user.getIdToken(true)
 
-    // IDトークン取得
-        const idToken = await user.getIdToken(true)
-
-    // Laravel API へ送信
         const data = await $fetch(`${config.public.apiBase}/api/register`, {
             method: 'POST',
             body: {
@@ -35,14 +30,12 @@ const register = async () => {
             }
         })
         if (data.user) {
-            await console.log(data.user)
             await router.push('/login')
         }
-        console.log('登録完了')
+
     } catch (err) {
-        console.error('Firebase Error:', err)
-        console.log('Error code:', err.code)
-        console.log('Error message:', err.message)
+        console.log(err)
+        error.value = "登録失敗"
     }
 }
 </script>
@@ -60,7 +53,7 @@ const register = async () => {
                 <input type="submit" value="新規登録" class="register-container__submit">
             </form>
         </div>
-        <!-- <p class="error_message" v-if="error">{{ error }}</p> -->
+        <p class="error_message" v-if="error">{{ error }}</p>
     </main>
 </template>
 

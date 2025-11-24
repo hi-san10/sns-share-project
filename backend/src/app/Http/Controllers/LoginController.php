@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Kreait\Firebase\Factory;
 
@@ -14,13 +13,8 @@ class LoginController extends Controller
 {
     public function register(Request $request)
     {
-        $idToken = $request->bearerToken();
-        if (!$idToken){
-            return response()->json(['error' => 'IDトークンがありません']);
-        }
-
         try {
-            $firebase = (new Factory)->withServiceAccount(storage_path('app/firebase/serviceAccountKey.json'));
+            (new Factory)->withServiceAccount(storage_path('app/firebase/serviceAccountKey.json'));
             $uid = $request->json('firebase_uid');
 
             $user = User::create([
