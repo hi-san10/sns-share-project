@@ -23,8 +23,6 @@ Route::get('/', function () {
 
 Route::middleware(['web'])->group(function ()
 {
-    Route::post('/login', [LoginController::class, 'login']);
-
     Route::post('/logout', [LoginController::class, 'logout']);
 });
 

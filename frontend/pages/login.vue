@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 const config = useRuntimeConfig();
 const router = useRouter();
@@ -8,28 +9,29 @@ const email = ref('');
 const password = ref('');
 const error = ref('');
 
+const nuxtApp = useNuxtApp()
+const auth = nuxtApp.$auth
+
 const login = async () => {
     try {
-        await $fetch(`${config.public.apiBase}/sanctum/csrf-cookie`, {
-            credentials: 'include',
-        })
+        const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value)
+        const idToken = await userCredential.user.getIdToken(true)
 
-        const xsrfToken = useCookie('XSRF-TOKEN')
-        const data = await $fetch(`${config.public.apiBase}/login`, {
+        const data = await $fetch(`${config.public.apiBase}/api/login`, {
             method: 'post',
-            body: {
-                email: email.value,
-                password: password.value
+            headers: {
+                Authorization: `Bearer ${idToken}`,
             },
-            credentials: 'include',
-            headers: { 'X-XSRF-TOKEN': decodeURIComponent(xsrfToken.value) }
         })
 
-        if (data.success) {
-            await router.push('/')
+        if (data.user) {
+            localStorage.setItem('user', JSON.stringify(data.user))
+            router.push('/')
         }
+
     } catch (err) {
         error.value = 'ログイン失敗'
+        console.log(err.data.error)
     }
 }
 </script>
