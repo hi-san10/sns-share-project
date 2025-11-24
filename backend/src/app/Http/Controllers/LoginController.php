@@ -39,22 +39,23 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        $user = User::where('email', $request->email)->first();
+        try {
+            $factory = (new Factory)->withServiceAccount(storage_path('app/firebase/serviceAccountKey.json'));
+            $auth = $factory->createAuth();
+            $idToken = $request->bearerToken();
 
-        if ($user) {
-            $credentials = ([
-                'email' => $request->email,
-                'password' => $request->password,
-            ]);
+            $verifiedIdToken = $auth->verifyIdToken($idToken);
+            $uid = $verifiedIdToken->claims()->get('sub');
 
-            Auth::attempt($credentials);
-            $request->session()->regenerate();
+            $user = User::where('firebase_uid', $uid)->first();
+            if (!$user) {
+                throw new \Exception('ユーザー情報がありません');
+            }
 
-            $user = auth()->user();
-            return response()->json([
-                'success' => true,
-                'user' => $user,
-            ]);
+            return response()->json(['user' => $user]);
+
+        } catch (\Throwable $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 

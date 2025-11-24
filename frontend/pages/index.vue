@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue';
 
 const config = useRuntimeConfig();
-const user = ref('');
+const user = JSON.parse(localStorage.getItem('user'));
 
 onMounted(async () => {
     try {
