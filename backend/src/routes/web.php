@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -18,12 +17,6 @@ use Illuminate\Http\Request;
 
 Route::get('/', function () {
     return view('welcome');
-});
-
-
-Route::middleware(['web'])->group(function ()
-{
-    Route::post('/logout', [LoginController::class, 'logout']);
 });
 
 Route::middleware('firebase.auth')->group(function () {

@@ -1,19 +1,14 @@
 <script setup>
-const config = useRuntimeConfig();
 const router = useRouter();
+const nuxtApp = useNuxtApp();
+const auth = nuxtApp.$auth;
+
 const logout = async () => {
     try {
-        const xsrfToken = useCookie('XSRF-TOKEN')
-        const data = await $fetch(`${config.public.apiBase}/logout`, {
-            method: 'post',
-            credentials: 'include',
-            headers: { 'X-XSRF-TOKEN': decodeURIComponent(xsrfToken.value) }
-        })
-
-        if (data.logout) {
-            router.push('/login')
-        }
-    } catch (err) {
+        await auth.signOut()
+        localStorage.removeItem('user')
+        router.push('/login')
+        } catch (err) {
         console.error(err)
     }
 }

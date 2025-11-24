@@ -58,16 +58,4 @@ class LoginController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
-    public function logout(Request $request)
-    {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return response()->json([
-            'logout' => true,
-        ]);
-    }
-
 }
