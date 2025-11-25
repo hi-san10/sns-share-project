@@ -1,11 +1,12 @@
 <script setup>
 import { ref } from 'vue'
 import { createUserWithEmailAndPassword } from "firebase/auth"
+import { useForm, useField } from 'vee-validate';
+import * as yup from 'yup';
 
 const config = useRuntimeConfig();
 const router = useRouter();
 
-const name = ref('');
 const email = ref('');
 const password = ref('');
 const error = ref('');
@@ -13,7 +14,18 @@ const error = ref('');
 const nuxtApp = useNuxtApp()
 const auth = nuxtApp.$auth
 
-const register = async () => {
+const schema = yup.object({
+    name: yup
+        .string()
+        .required('お名前を入力してください')
+        .max(20, 'お名前は20文字以内で入力してください')
+})
+const { handleSubmit, errors } = useForm({
+    validationSchema: schema
+})
+const { value: name } = useField('name', { validateOnInput: false });
+
+const register = handleSubmit(async (values) => {
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, email.value, password.value)
         const idToken = await userCredential.user.getIdToken(true)
@@ -21,7 +33,7 @@ const register = async () => {
         const data = await $fetch(`${config.public.apiBase}/api/register`, {
             method: 'POST',
             body: {
-                name: name.value,
+                name: values.name,
                 email: email.value,
                 password: password.value,
             },
@@ -37,7 +49,7 @@ const register = async () => {
         console.log(err)
         error.value = "登録失敗"
     }
-}
+})
 </script>
 
 
@@ -48,6 +60,7 @@ const register = async () => {
             <p class="register-container__title">新規登録</p>
             <form @submit.prevent="register" class="register-container__form">
                 <input type="text" v-model="name" placeholder="ユーザーネーム" class="register-container__input">
+                <p class="validate_name" style="color: red;">{{ errors.name }}</p>
                 <input type="email" v-model="email" placeholder="メールアドレス" class="register-container__input">
                 <input type="password" v-model="password" placeholder="パスワード" class="register-container__input">
                 <input type="submit" value="新規登録" class="register-container__submit">
@@ -68,7 +81,7 @@ main {
 .register-container {
     background-color: white;
     width: 400px;
-    height: 250px;
+    /* height: 250px; */
     margin: 250px auto 100px auto;
     border-radius: 5px;
 }
@@ -101,6 +114,7 @@ main {
     width: 100px;
     height: 40px;
     font-size: 12px;
+    margin-bottom: 10px;
 }
 
 .error_message {
