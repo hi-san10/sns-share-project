@@ -25,3 +25,5 @@ Route::apiResource('posts', PostController::class);
 Route::post('/register', [LoginController::class, 'register'])->middleware('firebase.auth');
 
 Route::post('/login', [LoginController::class, 'login'])->middleware('firebase.auth');
+
+// Route::get('/post', [PostController::class, 'index']);
