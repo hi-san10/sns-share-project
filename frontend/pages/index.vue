@@ -21,7 +21,7 @@ onMounted(async () => {
         <div>
             <h1 class="container-title">ホーム</h1>
             <h2 style="color: red;">{{ user.name }}</h2>
-            <Message v-if="posts.length > 0" v-for="post in posts" :key="post.id" :post="post"/>
+            <Message v-for="post in posts ?? []" :key="post.id" :post="post"/>
         </div>
     </main>
 </template>
