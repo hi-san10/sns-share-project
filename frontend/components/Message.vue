@@ -1,19 +1,17 @@
 <script setup>
 const config = useRuntimeConfig();
-const { data: posts, error } = await useFetch(`${config.public.apiBase}/api/posts`);
+const props = defineProps(['post'])
 </script>
 <template>
     <main>
-        <div v-for="post in posts" :key="post.id" class="message-container">
-            <div class="container-item">
-                <p class="message-container__user_name">{{ post.name }}</p>
-                <img class="message-container__img" src="/heart.png" alt="" />
-                <span class="message-container__count">0</span>
-                <img class="message-container__img" src="/cross.png" alt="" />
-                <img class="message-container__img detail" src="/detail.png" alt="" />
-            </div>
-            <p class="message-container__comment">{{ post.content }}</p>
+        <div class="container-item">
+            <p class="message-container__user_name">{{ post.name }}</p>
+            <img class="message-container__img" src="/heart.png" alt="" />
+            <span class="message-container__count">0</span>
+            <img class="message-container__img" src="/cross.png" alt="" />
+            <img class="message-container__img detail" src="/detail.png" alt="" />
         </div>
+        <p class="message-container__comment">{{ post.content }}</p>
     </main>
 </template>
 

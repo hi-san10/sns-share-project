@@ -4,20 +4,15 @@ import { onMounted, ref } from 'vue';
 const config = useRuntimeConfig();
 const user = JSON.parse(localStorage.getItem('user'));
 
+const posts = ref([]);
 onMounted(async () => {
     try {
-        const res = await $fetch(`${config.public.apiBase}/api/user`, {
-            credentials: 'include'
-        })
-        user.value = res
-        const user_name = user.value.name;
-        console.log('user', user_name)
+        const data = await $fetch(`${config.public.apiBase}/api/posts`)
+        posts.value = data;
     } catch (err) {
-        console.log('noUser', err)
+        console.log(err)
     }
 })
-
-const age = 36;
 </script>
 
 <template>
@@ -26,7 +21,7 @@ const age = 36;
         <div>
             <h1 class="container-title">ホーム</h1>
             <h2 style="color: red;">{{ user.name }}</h2>
-            <Message />
+            <Message v-if="posts.length > 0" v-for="post in posts" :key="post.id" :post="post"/>
         </div>
     </main>
 </template>
