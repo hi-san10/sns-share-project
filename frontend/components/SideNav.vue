@@ -23,7 +23,7 @@ const logout = async () => {
         </div>
         <div class="side_nav-item">
             <img src="/logout.png" alt="" class="item__img">
-            <button @click="logout" class="item__link">ログアウト</button>
+            <button @click="logout" class="item__link logout">ログアウト</button>
         </div>
         <form action="" class="side_nav-form">
             <p class="side_nav-title">シェア</p>
@@ -62,6 +62,11 @@ main {
     text-decoration: none;
     margin-left: 30px;
     font-weight: bold;
+}
+
+.logout {
+    background-color: #15202B;
+    border: none;
 }
 
 .side_nav-title {
