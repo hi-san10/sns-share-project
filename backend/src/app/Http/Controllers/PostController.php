@@ -17,10 +17,11 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = [
-            ['name' => 'hiro', 'content' => '最初の投稿'],
-            ['name' => 'taro', 'content' => '2番目の投稿'],
-        ];
+        // $posts = [
+        //     ['name' => 'hiro', 'content' => '最初の投稿'],
+        //     ['name' => 'taro', 'content' => '2番目の投稿'],
+        // ];
+        $posts = Post::all();
 
         return response()->json($posts);
     }
@@ -56,12 +57,13 @@ class PostController extends Controller
                 throw new \Exception('ユーザー情報がありません');
             }
 
-            Post::create([
+            $newPost = Post::create([
                 'user_id' => $user->id,
                 'content' => $request->input('content'),
             ]);
 
-            return response()->json(['success' => '投稿完了']);
+            return response()->json($newPost);
+
         } catch (\Throwable $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
