@@ -16,13 +16,14 @@ const logout = async () => {
 
 const config = useRuntimeConfig();
 const content = ref('');
+const emit = defineEmits(['newPost']);
 const post = async () => {
     try {
         const user = auth.currentUser
         if (!user) return
 
         const idToken = await user.getIdToken()
-        await $fetch(`${config.public.apiBase}/api/posts`, {
+        const newPost = await $fetch(`${config.public.apiBase}/api/posts`, {
             method: 'POST',
             body: {
                 content: content.value,
@@ -31,6 +32,9 @@ const post = async () => {
                 Authorization: `Bearer ${idToken}`,
             }
         })
+        emit('newPost', newPost)
+        content.value = '';
+
     } catch (error) {
         console.log(error)
     }
@@ -49,7 +53,7 @@ const post = async () => {
             <button @click="logout" class="item__link logout">ログアウト</button>
         </div>
         <form  @submit.prevent="post" class="side_nav-form">
-            <button type="submit" class="side_nav-title">シェア</button>
+            <p class="side_nav-title">シェア</p>
             <textarea v-model="content" class="side_nav-content"></textarea>
             <input type="submit" class="side_nav-submit" value="シェアする">
         </form>

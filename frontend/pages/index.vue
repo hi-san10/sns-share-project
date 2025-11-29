@@ -5,6 +5,10 @@ const config = useRuntimeConfig();
 const user = JSON.parse(localStorage.getItem('user'));
 
 const posts = ref([]);
+const addPost = (newPost) => {
+    posts.value.unshift(newPost)
+
+}
 onMounted(async () => {
     try {
         const data = await $fetch(`${config.public.apiBase}/api/posts`)
@@ -17,7 +21,7 @@ onMounted(async () => {
 
 <template>
     <main class="home-container">
-        <SideNav :user="user"/>
+        <SideNav :user="user" @newPost="addPost"/>
         <div>
             <h1 class="container-title">ホーム</h1>
             <h2 style="color: red;">{{ user.name }}</h2>
