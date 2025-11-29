@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\Post;
+use Kreait\Firebase\Factory;
 
 class PostController extends Controller
 {
@@ -39,7 +43,28 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $factory = (new Factory)->withServiceAccount(storage_path('app/firebase/serviceAccountKey.json'));
+            $auth = $factory->createAuth();
+            $idToken = $request->bearerToken();
+
+            $verifiedIdToken = $auth->verifyIdToken($idToken);
+            $uid = $verifiedIdToken->claims()->get('sub');
+
+            $user = User::where('firebase_uid', $uid)->first();
+            if (!$user) {
+                throw new \Exception('ユーザー情報がありません');
+            }
+
+            Post::create([
+                'user_id' => $user->id,
+                'content' => $request->input('content'),
+            ]);
+
+            return response()->json(['success' => '投稿完了']);
+        } catch (\Throwable $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**
