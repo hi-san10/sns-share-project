@@ -7,7 +7,6 @@ const auth = nuxtApp.$auth;
 const logout = async () => {
     try {
         await auth.signOut()
-        localStorage.removeItem('user')
         router.push('/login')
     } catch (err) {
         console.error(err)

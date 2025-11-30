@@ -21,7 +21,7 @@ onMounted(async () => {
 
 <template>
     <main class="home-container">
-        <SideNav :user="user" @newPost="addPost"/>
+        <SideNav  @newPost="addPost"/>
         <div>
             <h1 class="container-title">ホーム</h1>
             <h2 style="color: red;">{{ user.name }}</h2>
