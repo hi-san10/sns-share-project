@@ -46,7 +46,7 @@ class LoginController extends Controller
                 throw new \Exception('ユーザー情報がありません');
             }
 
-            return response()->json(['user' => $user]);
+            return response()->json($user);
 
         } catch (\Throwable $e) {
             return response()->json(['error' => $e->getMessage()], 500);

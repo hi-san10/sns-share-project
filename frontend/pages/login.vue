@@ -18,14 +18,14 @@ const login = async () => {
         const idToken = await userCredential.user.getIdToken(true)
 
         const data = await $fetch(`${config.public.apiBase}/api/login`, {
-            method: 'post',
+            method: 'POST',
             headers: {
                 Authorization: `Bearer ${idToken}`,
             },
         })
 
-        if (data.user) {
-            localStorage.setItem('user', JSON.stringify(data.user))
+        if (data) {
+            localStorage.setItem('user', JSON.stringify(data))
             router.push('/')
         }
 
