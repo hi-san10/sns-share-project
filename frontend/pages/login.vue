@@ -31,7 +31,7 @@ const login = async () => {
 
     } catch (err) {
         error.value = 'ログイン失敗'
-        console.log(err.data.error)
+        console.log(err)
     }
 }
 </script>
