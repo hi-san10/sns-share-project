@@ -1,9 +1,13 @@
 <script setup>
 import { ref } from 'vue';
+import { useForm, useField } from 'vee-validate';
+import * as yup from 'yup';
+
 const router = useRouter();
 const nuxtApp = useNuxtApp();
 const auth = nuxtApp.$auth;
 
+// ログアウト
 const logout = async () => {
     try {
         await auth.signOut()
@@ -14,9 +18,22 @@ const logout = async () => {
 }
 
 const config = useRuntimeConfig();
-const content = ref('');
 const emit = defineEmits(['newPost']);
-const post = async () => {
+
+// バリデーション
+const schema = yup.object({
+    content: yup
+        .string()
+        .required('投稿内容が空です')
+        .max(120, '投稿は120文字以内で入力してください')
+    })
+const { handleSubmit, errors } = useForm({
+    validationSchema: schema
+})
+const { value: content } = useField('content', { validateOnInput: false, validateOnMount: false });
+
+// 新規投稿
+const post = handleSubmit(async (values) => {
     try {
         const user = auth.currentUser
         if (!user) return
@@ -25,7 +42,7 @@ const post = async () => {
         const newPost = await $fetch(`${config.public.apiBase}/api/posts`, {
             method: 'POST',
             body: {
-                content: content.value,
+                content: values.content,
             },
             headers: {
                 Authorization: `Bearer ${idToken}`,
@@ -37,7 +54,7 @@ const post = async () => {
     } catch (error) {
         console.log(error)
     }
-}
+})
 </script>
 
 <template>
@@ -54,6 +71,7 @@ const post = async () => {
         <form  @submit.prevent="post" class="side_nav-form">
             <p class="side_nav-title">シェア</p>
             <textarea v-model="content" class="side_nav-content"></textarea>
+            <p class="validate_name" style="color: red; text-align: center;">{{ errors.content }}</p>
             <input type="submit" class="side_nav-submit" value="シェアする">
         </form>
     </main>
