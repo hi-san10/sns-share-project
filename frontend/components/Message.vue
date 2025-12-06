@@ -5,11 +5,13 @@ const props = defineProps(['post'])
 <template>
     <main>
         <div class="container-item">
-            <p class="message-container__user_name">{{ post.name }}</p>
+            <p class="message-container__user_name">{{ post.user?.name }}</p>
             <img class="message-container__img" src="/heart.png" alt="" />
             <span class="message-container__count">0</span>
             <img class="message-container__img" src="/cross.png" alt="" />
-            <img class="message-container__img detail" src="/detail.png" alt="" />
+            <NuxtLink :to="`/posts/${post.id}`">
+                <img class="message-container__img detail" src="/detail.png" alt="" />
+            </NuxtLink>
         </div>
         <p class="message-container__comment">{{ post.content }}</p>
     </main>

@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 
+const router = useRouter();
 const config = useRuntimeConfig();
 const user = JSON.parse(localStorage.getItem('user'));
 
@@ -25,7 +26,7 @@ onMounted(async () => {
         <div>
             <h1 class="container-title">ホーム</h1>
             <h2 style="color: red;">{{ user.name }}</h2>
-            <Message v-for="post in posts ?? []" :key="post.id" :post="post"/>
+            <Message v-for="post in posts ?? []" :key="post.id" :post="post" @click="router.push(`/posts/${post.id}`)"/>
         </div>
     </main>
 </template>
