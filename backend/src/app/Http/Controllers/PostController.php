@@ -21,7 +21,7 @@ class PostController extends Controller
         //     ['name' => 'hiro', 'content' => '最初の投稿'],
         //     ['name' => 'taro', 'content' => '2番目の投稿'],
         // ];
-        $posts = Post::all();
+        $posts = Post::with('user')->get();
 
         return response()->json($posts);
     }
@@ -77,7 +77,9 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        //
+        $post = Post::with('user')->where('id', $id)->first();
+
+        return response()->json($post);
     }
 
     /**
