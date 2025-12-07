@@ -21,19 +21,20 @@ const config = useRuntimeConfig();
 const emit = defineEmits(['newPost']);
 
 // バリデーション
-const schema = yup.object({
-    content: yup
+const { value: content, errors, validate } = useField(
+    'content',
+    yup
         .string()
         .required('投稿内容が空です')
-        .max(120, '投稿は120文字以内で入力してください')
-    })
-const { handleSubmit, errors } = useForm({
-    validationSchema: schema
-})
-const { value: content } = useField('content', { validateOnInput: false, validateOnMount: false });
+        .max(120, '投稿は120文字以内で入力してください'),
+    { validateOnInput: false, validateOnMount: false })
 
 // 新規投稿
-const post = handleSubmit(async (values) => {
+const post = async () => {
+    const result = await validate()
+    console.log("errors:", errors.value[0])
+    if (!result.valid) return
+
     try {
         const user = auth.currentUser
         if (!user) return
@@ -42,7 +43,7 @@ const post = handleSubmit(async (values) => {
         const newPost = await $fetch(`${config.public.apiBase}/api/posts`, {
             method: 'POST',
             body: {
-                content: values.content,
+                content: content.value,
             },
             headers: {
                 Authorization: `Bearer ${idToken}`,
@@ -54,7 +55,7 @@ const post = handleSubmit(async (values) => {
     } catch (error) {
         console.log(error)
     }
-})
+}
 </script>
 
 <template>
@@ -71,7 +72,7 @@ const post = handleSubmit(async (values) => {
         <form  @submit.prevent="post" class="side_nav-form">
             <p class="side_nav-title">シェア</p>
             <textarea v-model="content" class="side_nav-content"></textarea>
-            <p class="validate_name" style="color: red; text-align: center;">{{ errors.content }}</p>
+            <p v-if="errors[0]" class="validate_name" style="color: red; text-align: center;">{{ errors[0] }}</p>
             <input type="submit" class="side_nav-submit" value="シェアする">
         </form>
     </main>

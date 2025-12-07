@@ -57,10 +57,11 @@ class PostController extends Controller
                 throw new \Exception('ユーザー情報がありません');
             }
 
-            $newPost = Post::create([
+            $createPost = Post::create([
                 'user_id' => $user->id,
                 'content' => $request->input('content'),
             ]);
+            $newPost = Post::with('user')->where('id', $createPost->id)->first();
 
             return response()->json($newPost);
 
