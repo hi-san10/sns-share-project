@@ -47,7 +47,7 @@ main {
 
 .message-container__user_name {
     color: white;
-    margin-right: 20px;
+    width: 15%;
     font-size: x-large;
 }
 
