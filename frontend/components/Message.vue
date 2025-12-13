@@ -1,6 +1,7 @@
 <script setup>
 const config = useRuntimeConfig();
 const props = defineProps(['post'])
+const route = useRoute();
 </script>
 <template>
     <main>
@@ -10,7 +11,7 @@ const props = defineProps(['post'])
             <span class="message-container__count">0</span>
             <img class="message-container__img" src="/cross.png" alt="" />
             <NuxtLink :to="`/posts/${post.id}`">
-                <img class="message-container__img detail" src="/detail.png" alt="" />
+                <img v-if="!route.params.id" class="message-container__img detail" src="/detail.png" alt="" />
             </NuxtLink>
         </div>
         <p class="message-container__comment">{{ post.content }}</p>
@@ -46,7 +47,7 @@ main {
 
 .message-container__user_name {
     color: white;
-    margin-right: 20px;
+    width: 15%;
     font-size: x-large;
 }
 

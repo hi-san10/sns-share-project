@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
@@ -26,4 +27,4 @@ Route::post('/register', [LoginController::class, 'register'])->middleware('fire
 
 Route::post('/login', [LoginController::class, 'login'])->middleware('firebase.auth');
 
-// Route::get('/post', [PostController::class, 'index']);
+Route::post('/comment', [CommentController::class, 'comment']);
