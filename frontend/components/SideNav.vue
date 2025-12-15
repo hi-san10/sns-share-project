@@ -1,6 +1,5 @@
 <script setup>
-import { ref } from 'vue';
-import { useForm, useField } from 'vee-validate';
+import { useField } from 'vee-validate';
 import * as yup from 'yup';
 
 const router = useRouter();
@@ -21,7 +20,7 @@ const config = useRuntimeConfig();
 const emit = defineEmits(['newPost']);
 
 // バリデーション
-const { value: content, errors, validate } = useField(
+const { value: content, errors, validate, resetField } = useField(
     'content',
     yup
         .string()
@@ -50,8 +49,7 @@ const post = async () => {
             }
         })
         emit('newPost', newPost)
-        content.value = '';
-
+        resetField();
     } catch (error) {
         console.log(error)
     }
