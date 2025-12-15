@@ -1,7 +1,8 @@
 <script setup>
 import { useRoute } from 'vue-router';
 import { useRuntimeConfig } from '#app';
-import { ref } from 'vue';
+import { useField } from 'vee-validate';
+import * as yup from 'yup';
 
 const config = useRuntimeConfig();
 const route = useRoute();
@@ -13,13 +14,22 @@ const auth = nuxtApp.$auth;
 const currentUserUid = auth.currentUser.uid;
 const postUserUid = post.value.user.firebase_uid;
 
-const content = ref('');
+// バリデーション
+const { value: content, errors, validate, resetField } = useField(
+    'content',
+    yup
+        .string()
+        .required('コメントが空です')
+        .max(120, 'コメントは120文字以内で入力してください'),
+    { validateOnInput: false, validateOnMount: false })
 
 // コメント送信
 const comment = async () => {
-    const idToken = await auth.currentUser.getIdToken()
+    const result = await validate()
+    if (!result.valid) return
 
     try {
+        const idToken = await auth.currentUser.getIdToken()
         await $fetch(`${config.public.apiBase}/api/comment`, {
             method: 'POST',
             body: {
@@ -30,7 +40,7 @@ const comment = async () => {
                 Authorization: `Bearer ${idToken}`,
             }
         })
-        content.value = ''
+        resetField();
     } catch (error) {
         console.log(error)
     }
@@ -52,6 +62,7 @@ const comment = async () => {
                     <textarea v-model="content" class="comment__textarea"></textarea>
                     <input type="submit" class="comment__submit" value="コメント">
                 </form>
+                <p v-if="errors[0]" class="validate_name" style="color: red; text-align: center;">{{ errors[0] }}</p>
             </div>
         </div>
     </main>
