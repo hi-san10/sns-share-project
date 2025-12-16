@@ -2,13 +2,29 @@
 const config = useRuntimeConfig();
 const props = defineProps(['post'])
 const route = useRoute();
+const user = useState('user');
+
+// いいね
+const nice = async () => {
+    try {
+        await $fetch(`${config.public.apiBase}/api/nice`, {
+            method: 'POST',
+            body: {
+                userId: user.value.id,
+                postId: props.post.id,
+            }
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
 </script>
 <template>
     <main>
         <div class="container-item">
             <p class="message-container__user_name">{{ post.user?.name }}</p>
-            <img class="message-container__img" src="/heart.png" alt="" />
-            <span class="message-container__count">0</span>
+            <img @click.prevent.stop="nice" class="message-container__img" src="/heart.png" alt="" />
+            <span class="message-container__count">{{ post.nices_count }}</span>
             <img class="message-container__img" src="/cross.png" alt="" />
             <NuxtLink :to="`/posts/${post.id}`">
                 <img v-if="!route.params.id" class="message-container__img detail" src="/detail.png" alt="" />

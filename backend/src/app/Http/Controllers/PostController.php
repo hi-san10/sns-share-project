@@ -17,11 +17,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        // $posts = [
-        //     ['name' => 'hiro', 'content' => '最初の投稿'],
-        //     ['name' => 'taro', 'content' => '2番目の投稿'],
-        // ];
-        $posts = Post::with('user')->get();
+        $posts = Post::with('user')->withCount('nices')->get();
 
         return response()->json($posts);
     }
