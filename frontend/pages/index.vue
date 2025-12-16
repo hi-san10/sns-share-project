@@ -1,9 +1,15 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-
 const router = useRouter();
 const config = useRuntimeConfig();
-const user = JSON.parse(localStorage.getItem('user'));
+
+const user = useState('user', () => {
+    if (process) {
+        const stored = localStorage.getItem('user')
+        return stored ? JSON.parse(stored) : null
+    }
+    return null
+});
 
 const posts = ref([]);
 const addPost = (newPost) => {
