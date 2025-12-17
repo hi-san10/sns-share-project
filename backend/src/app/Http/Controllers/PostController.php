@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Post;
 use Kreait\Firebase\Factory;
+use Throwable;
 
 class PostController extends Controller
 {
@@ -108,8 +109,15 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, $user_id)
     {
-        //
+        $user = User::where('id', $user_id)->first();
+        $post = Post::where('id', $id)->first();
+
+        if ($user->id !== $post->user_id) {
+            return;
+        };
+
+        $post->delete();
     }
 }

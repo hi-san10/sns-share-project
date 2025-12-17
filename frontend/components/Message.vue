@@ -3,6 +3,8 @@ const config = useRuntimeConfig();
 const props = defineProps(['post'])
 const route = useRoute();
 const user = useState('user');
+const userId = user.value.id;
+const id = props.post.id;
 
 // いいね
 const nice = async () => {
@@ -18,6 +20,19 @@ const nice = async () => {
         console.log(error)
     }
 }
+
+// 投稿削除
+const postDelete = async () => {
+    if (user.value.id !== props.post.user_id) return
+
+    try {
+        await $fetch(`${config.public.apiBase}/api/posts/${id}/${userId}`, {
+            method: 'DELETE',
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
 </script>
 <template>
     <main>
@@ -25,7 +40,7 @@ const nice = async () => {
             <p class="message-container__user_name">{{ post.user?.name }}</p>
             <img @click.prevent.stop="nice" class="message-container__img" src="/heart.png" alt="" />
             <span class="message-container__count">{{ post.nices_count }}</span>
-            <img class="message-container__img" src="/cross.png" alt="" />
+            <img  @click.prevent.stop="postDelete" class="message-container__img" src="/cross.png" alt="" />
             <NuxtLink :to="`/posts/${post.id}`">
                 <img v-if="!route.params.id" class="message-container__img detail" src="/detail.png" alt="" />
             </NuxtLink>

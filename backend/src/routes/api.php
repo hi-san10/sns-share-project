@@ -33,3 +33,5 @@ Route::post('/comment', [CommentController::class, 'comment']);
 Route::post('/nice', [NiceController::class, 'nice']);
 
 Route::get('/nice_count', [NiceController::class, 'niceCount']);
+
+Route::delete('posts/{id}/{user_id}', [PostController::class, 'destroy']);

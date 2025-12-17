@@ -5,8 +5,8 @@ const config = useRuntimeConfig();
 
 const user = useState('user', () => null)
 onMounted(() => {
-  const stored = localStorage.getItem('user')
-  user.value = stored ? JSON.parse(stored) : null
+    const stored = localStorage.getItem('user')
+    user.value = stored ? JSON.parse(stored) : null
 })
 
 const posts = ref([]);
