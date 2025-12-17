@@ -3,13 +3,11 @@ import { onMounted, ref } from 'vue';
 const router = useRouter();
 const config = useRuntimeConfig();
 
-const user = useState('user', () => {
-    if (process) {
-        const stored = localStorage.getItem('user')
-        return stored ? JSON.parse(stored) : null
-    }
-    return null
-});
+const user = useState('user', () => null)
+onMounted(() => {
+  const stored = localStorage.getItem('user')
+  user.value = stored ? JSON.parse(stored) : null
+})
 
 const posts = ref([]);
 const addPost = (newPost) => {
