@@ -31,7 +31,7 @@ onMounted(fetchPosts);
         <div class="container_item">
             <h1 class="container-title">ホーム</h1>
             <h2 style="color: red;">{{ user?.name }}</h2>
-            <Message v-for="post in posts ?? []" :key="post.id" :post="post" @delete="fetchPosts" @click="router.push(`/posts/${post.id}`)"/>
+            <Message v-for="post in posts ?? []" :key="post.id" :post="post" @update="fetchPosts" @click="router.push(`/posts/${post.id}`)"/>
         </div>
     </main>
 </template>

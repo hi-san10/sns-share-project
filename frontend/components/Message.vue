@@ -6,6 +6,8 @@ const user = useState('user');
 const userId = user.value.id;
 const id = props.post.id;
 
+const emit = defineEmits(['update']);
+
 // いいね
 const nice = async () => {
     try {
@@ -16,13 +18,13 @@ const nice = async () => {
                 postId: props.post.id,
             }
         })
+        emit('update')
     } catch (error) {
         console.log(error)
     }
 }
 
 // 投稿削除
-const emit = defineEmits(['delete']);
 const postDelete = async () => {
     if (user.value.id !== props.post.user_id) return
 
@@ -30,7 +32,7 @@ const postDelete = async () => {
         await $fetch(`${config.public.apiBase}/api/posts/${id}/${userId}`, {
             method: 'DELETE',
         })
-        emit('delete')
+        emit('update')
     } catch (error) {
         console.log(error)
     }
