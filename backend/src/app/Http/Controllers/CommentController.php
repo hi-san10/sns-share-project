@@ -26,11 +26,14 @@ class CommentController extends Controller
                 throw new \Exception('ユーザー情報がありません');
             }
 
-            Comment::create([
+            $newComment = Comment::create([
                 'user_id' => $user->id,
                 'post_id' => $request->input('postId'),
                 'content' => $request->input('content'),
             ]);
+            $comment = Comment::with('user')->where('id', $newComment->id)->first();
+
+            return response()->json($comment);
         } catch (\Throwable $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

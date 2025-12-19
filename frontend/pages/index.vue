@@ -14,14 +14,15 @@ const addPost = (newPost) => {
     posts.value.unshift(newPost)
 
 }
-onMounted(async () => {
+const fetchPosts = async () => {
     try {
         const data = await $fetch(`${config.public.apiBase}/api/posts`)
         posts.value = data;
     } catch (err) {
         console.log(err)
     }
-})
+}
+onMounted(fetchPosts);
 </script>
 
 <template>
@@ -29,8 +30,8 @@ onMounted(async () => {
         <SideNav  @newPost="addPost"/>
         <div class="container_item">
             <h1 class="container-title">ホーム</h1>
-            <h2 style="color: red;">{{ user.name }}</h2>
-            <Message v-for="post in posts ?? []" :key="post.id" :post="post" @click="router.push(`/posts/${post.id}`)"/>
+            <h2 style="color: red;">{{ user?.name }}</h2>
+            <Message v-for="post in posts ?? []" :key="post.id" :post="post" @delete="fetchPosts" @click="router.push(`/posts/${post.id}`)"/>
         </div>
     </main>
 </template>

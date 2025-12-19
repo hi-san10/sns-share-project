@@ -30,7 +30,7 @@ const comment = async () => {
 
     try {
         const idToken = await auth.currentUser.getIdToken()
-        await $fetch(`${config.public.apiBase}/api/comment`, {
+        const newComment = await $fetch(`${config.public.apiBase}/api/comment`, {
             method: 'POST',
             body: {
                 postId: post.value.id,
@@ -41,6 +41,7 @@ const comment = async () => {
             }
         })
         resetField();
+        post.value.comments.unshift(newComment);
     } catch (error) {
         console.log(error)
     }
@@ -63,6 +64,7 @@ const comment = async () => {
                     <input type="submit" class="comment__submit" value="コメント">
                 </form>
                 <p v-if="errors[0]" class="validate_name" style="color: red; text-align: center;">{{ errors[0] }}</p>
+                <p style="color: white;">{{ post }}</p>
             </div>
         </div>
     </main>
