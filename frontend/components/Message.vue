@@ -22,6 +22,7 @@ const nice = async () => {
 }
 
 // 投稿削除
+const emit = defineEmits(['delete']);
 const postDelete = async () => {
     if (user.value.id !== props.post.user_id) return
 
@@ -29,6 +30,7 @@ const postDelete = async () => {
         await $fetch(`${config.public.apiBase}/api/posts/${id}/${userId}`, {
             method: 'DELETE',
         })
+        emit('delete')
     } catch (error) {
         console.log(error)
     }
