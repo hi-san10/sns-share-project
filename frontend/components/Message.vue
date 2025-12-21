@@ -42,11 +42,11 @@ const postDelete = async () => {
     <main>
         <div class="container-item">
             <p class="message-container__user_name">{{ post.user?.name }}</p>
-            <img @click.prevent.stop="nice" class="message-container__img" src="/heart.png" alt="" />
-            <span class="message-container__count">{{ post.nices_count }}</span>
-            <img  @click.prevent.stop="postDelete" class="message-container__img" src="/cross.png" alt="" />
+            <img @click.prevent.stop="nice" class="message-container__img" src="/heart.png"/>
+            <span class="message-container__count">{{ post.nices_count ?? 0 }}</span>
+            <img  @click.prevent.stop="postDelete" class="message-container__img" src="/cross.png"/>
             <NuxtLink :to="`/posts/${post.id}`">
-                <img v-if="!route.params.id" class="message-container__img detail" src="/detail.png" alt="" />
+                <img v-if="!route.params.id" class="message-container__img detail" src="/detail.png"/>
             </NuxtLink>
         </div>
         <p class="message-container__comment">{{ post.content }}</p>

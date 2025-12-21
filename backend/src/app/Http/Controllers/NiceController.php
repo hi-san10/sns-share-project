@@ -23,11 +23,4 @@ class NiceController extends Controller
             $nice->delete();
         }
     }
-
-    public function niceCount($id)
-    {
-        $nice = Nice::where('post_id', $id)->count();
-
-        return response()->json($nice);
-    }
 }

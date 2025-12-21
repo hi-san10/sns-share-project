@@ -18,8 +18,3 @@ use Illuminate\Http\Request;
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::middleware('firebase.auth')->group(function () {
-    Route::get('/user', fn() => auth()->user());
-});
-

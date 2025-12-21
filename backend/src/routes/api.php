@@ -4,7 +4,6 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\NiceController;
 use App\Http\Controllers\PostController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,7 +30,5 @@ Route::post('/login', [LoginController::class, 'login'])->middleware('firebase.a
 Route::post('/comment', [CommentController::class, 'comment']);
 
 Route::post('/nice', [NiceController::class, 'nice']);
-
-Route::get('/nice_count', [NiceController::class, 'niceCount']);
 
 Route::delete('posts/{id}/{user_id}', [PostController::class, 'destroy']);
