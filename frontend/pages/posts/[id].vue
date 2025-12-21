@@ -64,7 +64,6 @@ const comment = async () => {
                     <input type="submit" class="comment__submit" value="コメント">
                 </form>
                 <p v-if="errors[0]" class="validate_name" style="color: red; text-align: center;">{{ errors[0] }}</p>
-                <p style="color: white;">{{ post }}</p>
             </div>
         </div>
     </main>
