@@ -1,5 +1,6 @@
 *
 !public/
 !.gitignore
+!firebase/
 !firebase/serviceAccountKey.json.example
 
