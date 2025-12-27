@@ -2,14 +2,14 @@
 
 ## Twitter風SNSアプリ
 
+### 投稿の追加と削除、各投稿にコメント、いいねができる簡素なSNSアプリ
+
 ## 環境構築
 
 ### 動作環境
 - Firebase
 - Node.js v22
 - yarn
-- Node.jsバージョン確認
-    node -v
 
 ### Node.jsインストール
 
@@ -62,6 +62,7 @@
 ### Laravel環境構築
 
 1. Dockerビルドし、composerで依存関係をインストール
+
     *MYSQLは、OSによって起動しない場合があるのでそれぞれのPCに合わせて docker-compose.yml ファイルを編集してください。
 
     docker-compose up -d --build
@@ -75,6 +76,7 @@
     cp .env.example .env
 
     秘密鍵のパスを設定
+
         FIREBASE_CREDENTIALS=backend/src/storage/app/firebase/serviceAccountKey.json
 
     php artisan config:clear で.env情報を更新
@@ -85,11 +87,17 @@
 
 ## 使用技術
 
-・PHP 8.3
+- PHP 8.3
 
-・Laravel 8.83
+- Laravel 8.83
 
-・MYSQL 8.0
+- vue.js 3
+
+- Nuxt.js 3
+
+- vee-validate 4
+
+- MYSQL 8.0
 
 ## ER図
 
