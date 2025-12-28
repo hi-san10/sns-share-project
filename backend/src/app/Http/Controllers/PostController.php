@@ -75,7 +75,7 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        $post = Post::with('user', 'comments.user')->where('id', $id)->first();
+        $post = Post::with('user', 'comments.user')->withCount('nices')->where('id', $id)->first();
 
         return response()->json($post);
     }
