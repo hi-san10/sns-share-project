@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { createUserWithEmailAndPassword } from "firebase/auth"
-import { useForm, useField } from 'vee-validate';
+import { useField } from 'vee-validate';
 import * as yup from 'yup';
 
 const config = useRuntimeConfig();
@@ -14,18 +14,20 @@ const error = ref('');
 const nuxtApp = useNuxtApp()
 const auth = nuxtApp.$auth
 
-const schema = yup.object({
-    name: yup
+// バリデーション
+const { value: name, errors, validate, resetField } = useField(
+    'name',
+    yup
         .string()
         .required('お名前を入力してください')
-        .max(20, 'お名前は20文字以内で入力してください')
-})
-const { handleSubmit, errors } = useForm({
-    validationSchema: schema
-})
-const { value: name } = useField('name', { validateOnInput: false });
+        .max(20, 'お名前は20文字以内で入力してください'),
+    { validateOnInput: false });
 
-const register = handleSubmit(async (values) => {
+// 新規登録
+const register = async () => {
+    const result = await validate()
+    console.log("errors:", errors.value[0])
+    if (!result.valid) return
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, email.value, password.value)
         const idToken = await userCredential.user.getIdToken(true)
@@ -33,7 +35,7 @@ const register = handleSubmit(async (values) => {
         const data = await $fetch(`${config.public.apiBase}/api/register`, {
             method: 'POST',
             body: {
-                name: values.name,
+                name: name.value,
                 email: email.value,
                 password: password.value,
             },
@@ -44,12 +46,13 @@ const register = handleSubmit(async (values) => {
         if (data.user) {
             await router.push('/login')
         }
+        resetField();
 
     } catch (err) {
         console.log(err)
         error.value = "登録失敗"
     }
-})
+}
 </script>
 
 
@@ -60,7 +63,7 @@ const register = handleSubmit(async (values) => {
             <p class="register-container__title">新規登録</p>
             <form @submit.prevent="register" class="register-container__form">
                 <input type="text" v-model="name" placeholder="ユーザーネーム" class="register-container__input">
-                <p class="validate_name" style="color: red;">{{ errors.name }}</p>
+                <p class="validate_name" style="color: red;">{{ errors[0] }}</p>
                 <input type="email" v-model="email" placeholder="メールアドレス" class="register-container__input">
                 <input type="password" v-model="password" placeholder="パスワード" class="register-container__input">
                 <input type="submit" value="新規登録" class="register-container__submit">
