@@ -17,11 +17,9 @@
     height: 10vh;
 }
 
-
 .header_logo {
     width: 300px;
     height: 70px;
-
 }
 
 .header__nav {
