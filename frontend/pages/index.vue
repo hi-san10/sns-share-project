@@ -17,7 +17,6 @@ const addPost = (newPost) => {
 const fetchPosts = async () => {
     try {
         posts.value = await $fetch(`${config.public.apiBase}/api/posts`)
-        // posts.value = data;
     } catch (err) {
         console.log(err)
     }

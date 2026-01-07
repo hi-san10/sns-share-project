@@ -81,7 +81,6 @@ main {
 .register-container {
     background-color: white;
     width: 400px;
-    /* height: 250px; */
     margin: 250px auto 100px auto;
     border-radius: 5px;
 }

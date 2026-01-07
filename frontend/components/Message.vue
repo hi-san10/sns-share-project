@@ -14,8 +14,8 @@ const nice = async () => {
         await $fetch(`${config.public.apiBase}/api/nice`, {
             method: 'POST',
             body: {
-                userId: user.value.id,
-                postId: props.post.id,
+                userId: userId,
+                postId: id,
             }
         })
         emit('update')
