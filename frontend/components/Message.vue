@@ -3,7 +3,7 @@ const config = useRuntimeConfig();
 const props = defineProps(['post'])
 const route = useRoute();
 const user = useState('user');
-const userId = user.value.id;
+const userId = user.value?.id;
 const id = props.post.id;
 
 const emit = defineEmits(['update']);

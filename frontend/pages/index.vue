@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue';
 const router = useRouter();
 const config = useRuntimeConfig();
 
-const user = useState('user', () => null)
+const user = useState('user', () => ({}))
 onMounted(() => {
     const stored = localStorage.getItem('user')
     user.value = stored ? JSON.parse(stored) : null
