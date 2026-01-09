@@ -1,10 +1,20 @@
 <script setup>
 import { onMounted, ref } from 'vue';
+import { onAuthStateChanged } from 'firebase/auth';
+const nuxtApp = useNuxtApp()
+const auth = nuxtApp.$auth
+
 const router = useRouter();
 const config = useRuntimeConfig();
 
 const user = useState('user', () => ({}))
 onMounted(() => {
+    onAuthStateChanged(auth, (firebaseUser) => {
+        if (!firebaseUser) {
+            user.value = {};
+            router.replace('/login')
+        }
+    })
     const stored = localStorage.getItem('user')
     user.value = stored ? JSON.parse(stored) : null
 })
