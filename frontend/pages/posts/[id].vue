@@ -7,7 +7,7 @@ import * as yup from 'yup';
 const config = useRuntimeConfig();
 const route = useRoute();
 const id = route.params.id;
-const { data: post } = await useFetch(`${config.public.apiBase}/api/posts/${id}`)
+const { data: post, refresh } = await useFetch(`${config.public.apiBase}/api/posts/${id}`)
 
 const nuxtApp = useNuxtApp();
 const auth = nuxtApp.$auth;
@@ -52,7 +52,7 @@ const comment = async () => {
         <SideNav />
         <div class="comment-container">
             <h1 class="container-title">コメント</h1>
-            <Message v-if="post" :post="post"/>
+            <Message v-if="post" :post="post" @update="refresh"/>
             <p class="container-sub_title">コメント</p>
             <div class="comment_item" v-for="comment in post.comments">
                 <p class="posts-container__comment comment_user">{{ comment.user.name }}</p>
