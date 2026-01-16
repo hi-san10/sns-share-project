@@ -13,10 +13,11 @@ onMounted(() => {
         if (!firebaseUser) {
             user.value = {};
             router.replace('/login')
+        } else {
+            const stored = localStorage.getItem('user')
+            user.value = stored ? JSON.parse(stored) : null
         }
     })
-    const stored = localStorage.getItem('user')
-    user.value = stored ? JSON.parse(stored) : null
 })
 
 const posts = ref([]);
